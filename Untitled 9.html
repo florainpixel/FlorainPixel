@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Colour Tones</title>
+    <link rel="stylesheet" href="https://use.typekit.net/fpk0lfw.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: "rustica", sans-serif;
+            font-weight: 100;
+            font-style: thin;
+            text-align: center;
+            padding: 20px;
+            margin: 10;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-variation-settings: 'wght' 100;
+        }
+        .flower-grid, .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 30px;
+            justify-content: center;
+            margin-top: 60px;
+			margin-bottom: 60px;
+        }
+        .flower-item, .palette-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            width: 200px;
+            height: auto;
+        }
+        .slider {
+            width: 80%;
+            margin-top: 30px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: white;
+            border-radius: 5px;
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb,
+        .slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>FLORA IN PIXEL</h1>
+    <p>PIXELATE THE FLOWERS TO FIND THE COLOURS WITHIN THEM</p>
+
+    <div class="flower-grid">
+        <!-- Flower Canvases with Sliders -->
+        <div class="flower-item">
+            <canvas id="flowerCanvas1"></canvas>
+            <input type="range" class="slider" id="slider1" min="5" max="200" value="30">
+        </div>
+        <div class="flower-item">
+            <canvas id="flowerCanvas2"></canvas>
+            <input type="range" class="slider" id="slider2" min="5" max="170" value="30">
+        </div>
+        <div class="flower-item">
+            <canvas id="flowerCanvas3"></canvas>
+            <input type="range" class="slider" id="slider3" min="5" max="180" value="30">
+        </div>
+        <div class="flower-item">
+            <canvas id="flowerCanvas4"></canvas>
+            <input type="range" class="slider" id="slider4" min="5" max="185" value="30">
+        </div>
+    </div>
+
+    <div class="palette-grid">
+        <!-- Palette Images -->
+        <div class="palette-item">
+            <img src="white p.png" alt="white Palette" style="width: 200px;">
+        </div>
+        <div class="palette-item">
+            <img src="purple p.png" alt="Purple Palette" style="width: 200px;">
+        </div>
+        <div class="palette-item">
+            <img src="yellow p.png" alt="yellow Palette" style="width: 200px;">
+            <table border="1">
+            </table>
+        </div>
+        <div class="palette-item">
+            <img src="pink p.png" alt="pink Palette" style="width: 200px;">
+        </div>
+    </div>
+<table border="1">
+</table>
+<script>
+        const flowerImages = [
+            'flower 01.png',
+            'flower 02.png',
+            'flower 03.png',
+            'flower 04.png'
+        ];
+
+        const canvases = [
+            document.getElementById('flowerCanvas1'),
+            document.getElementById('flowerCanvas2'),
+            document.getElementById('flowerCanvas3'),
+            document.getElementById('flowerCanvas4')
+        ];
+
+        const sliders = [
+            document.getElementById('slider1'),
+            document.getElementById('slider2'),
+            document.getElementById('slider3'),
+            document.getElementById('slider4')
+        ];
+
+        const flowerObjects = flowerImages.map(src => {
+            const img = new Image();
+            img.src = src;
+            return img;
+        });
+
+        function applyPixelation(image, canvas, pixelSize) {
+            const ctx = canvas.getContext('2d');
+            const width = Math.floor(canvas.width / pixelSize);
+            const height = Math.floor(canvas.height / pixelSize);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, width, height);
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(canvas, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
+        }
+
+        flowerObjects.forEach((img, index) => {
+            const canvas = canvases[index];
+            const slider = sliders[index];
+
+            img.onload = () => {
+                canvas.width = img.width * 0.8;
+                canvas.height = img.height * 0.8;
+                applyPixelation(img, canvas, slider.value);
+
+                slider.addEventListener('input', () => {
+                    applyPixelation(img, canvas, slider.value);
+                });
+            };
+        });
+    </script>
+</body>
+</html>
